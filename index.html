@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Scratch Car</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>Scratch Car</h1>
+  <div id="car-container" style="position: relative;">
+    <img id="car-image" src="images/car_interior.svg" alt="Car Interior" style="width:100%;">
+    <img id="car-light-overlay" src="images/car_light_overlay.svg" alt="Car Light Overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none;">
+  </div>
+  <div id="blocks-container">
+    <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+    <button id="runButton">実行</button>
+  </div>
+  <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
