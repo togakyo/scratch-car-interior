@@ -1,6 +1,6 @@
 # Scratch Car
 
-This is a simple web-based project that uses the Blockly library to create a visual programming environment for controlling a virtual car.
+This is a simple, interactive web-based project that leverages the Blockly library to provide a visual programming environment. Users can drag and drop blocks to create programs that control a virtual car's functionalities, such as turning its lights on/off and playing/stopping its horn. It serves as an educational tool to introduce basic programming concepts through a fun and engaging interface.
 
 ## How to Use
 
