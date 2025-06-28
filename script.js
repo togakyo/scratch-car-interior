@@ -1,4 +1,11 @@
-window.onload = function() {
+console.log("script.js loaded");
+console.log("Blockly.JavaScript['car_light'] at load:", typeof Blockly !== 'undefined' ? Blockly.JavaScript['car_light'] : 'Blockly not loaded');
+
+// 1. workspaceをvarで宣言しグローバル化
+var workspace;
+
+
+  // Blocklyロード後にすべて定義
   Blockly.Blocks['car_horn'] = {
     init: function() {
       this.appendDummyInput()
@@ -12,13 +19,6 @@ window.onload = function() {
       this.setHelpUrl("");
     }
   };
-
-  Blockly.JavaScript['car_horn'] = function(block) {
-    var state = block.getFieldValue('STATE');
-    var code = 'setCarHorn("' + state + '");\n';
-    return code;
-  };
-
   Blockly.Blocks['car_light'] = {
     init: function() {
       this.appendDummyInput()
@@ -32,31 +32,42 @@ window.onload = function() {
       this.setHelpUrl("");
     }
   };
-
-  Blockly.JavaScript['car_light'] = function(block) {
-    var state = block.getFieldValue('STATE');
-    var code = 'setCarLight("' + state + '");\n';
-    return code;
+  // generator定義をwindow.Blocklyで明示的に
+  //window.Blockly.JavaScript['car_horn'] = function(block) {
+  //  var state = block.getFieldValue('STATE');
+  //  return 'setCarHorn("' + state + '\');\n';
+  //};
+  Blockly.JavaScript.forBlock['car_horn'] = function(block, generator) {
+  const state = block.getFieldValue('STATE');
+  return `setCarHorn("${state}");\n`;
   };
+  //window.Blockly.JavaScript['car_light'] = function(block) {
+  //  var state = block.getFieldValue('STATE');
+  //  return 'setCarLight("' + state + '");\n';
+  //};
+  Blockly.JavaScript.forBlock['car_light'] = function(block, generator) {
+  const state = block.getFieldValue('STATE');
+  return `setCarLight("${state}");\n`;
+  };
+  console.log("car_light generator defined:", window.Blockly.JavaScript['car_light']);
+  console.log("window.Blockly.JavaScript:", window.Blockly.JavaScript); // 追加
 
-  var workspace = Blockly.inject('blocklyDiv', {
+  // injectはgenerator定義の後に
+  workspace = Blockly.inject('blocklyDiv', {
     media: 'https://unpkg.com/blockly/media/',
     toolbox: '<xml><block type="car_light"></block><block type="car_horn"></block><block type="controls_if"></block><block type="text"></block></xml>'
   });
+  window.workspace = workspace; // デバッグ用にグローバル公開
+
+  // --- Application-specific logic ---
+  var hornSound = new Audio('sounds/horn.mp3');
 
   function setCarLight(state) {
-    console.log("ライトを" + (state === "ON" ? "点灯" : "消灯") + "しました。");
     var lightOverlay = document.getElementById('car-light-overlay');
-    if (state === "ON") {
-      lightOverlay.style.display = "block";
-    } else {
-      lightOverlay.style.display = "none";
-    }
+    lightOverlay.style.display = (state === "ON") ? "block" : "none";
   }
 
   function setCarHorn(state) {
-    console.log("警告音を" + (state === "PLAY" ? "鳴らしました" : "止めました") + "。");
-    var hornSound = new Audio('https://www.soundjay.com/buttons/beep-07.mp3'); // 著作権フリーの短い効果音のURL
     if (state === "PLAY") {
       hornSound.play();
     } else {
@@ -64,15 +75,6 @@ window.onload = function() {
       hornSound.currentTime = 0;
     }
   }
-
-  workspace.addChangeListener(function(event) {
-    if (event.type == Blockly.Events.BLOCK_CHANGE ||
-        event.type == Blockly.Events.BLOCK_CREATE ||
-        event.type == Blockly.Events.BLOCK_DELETE ||
-        event.type == Blockly.Events.BLOCK_MOVE) {
-      // コードの自動実行を削除
-    }
-  });
 
   document.getElementById('runButton').addEventListener('click', function() {
     var code = Blockly.JavaScript.workspaceToCode(workspace);
@@ -83,28 +85,18 @@ window.onload = function() {
     }
   });
 
+  // ワークスペースをクリアしてからブロックをロード
+  workspace.clear();
   var xmlText = '<xml>' +
     '  <block type="car_light" x="70" y="70">' +
     '    <field name="STATE">ON</field>' +
     '    <next>' +
     '      <block type="car_horn">' +
     '        <field name="STATE">PLAY</field>' +
-    '        <next>' +
-    '          <block type="car_light">' +
-    '            <field name="STATE">OFF</field>' +
-    '            <next>' +
-    '              <block type="car_horn">' +
-    '                <field name="STATE">STOP</field>' +
-    '              </block>' +
-    '            </next>' +
-    '          </block>' +
-    '        </next>' +
     '      </block>' +
     '    </next>' +
     '  </block>' +
     '</xml>';
-
   var parser = new DOMParser();
   var xmlDom = parser.parseFromString(xmlText, 'text/xml');
   Blockly.Xml.domToWorkspace(xmlDom.documentElement, workspace);
-};
