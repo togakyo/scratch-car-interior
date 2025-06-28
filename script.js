@@ -58,6 +58,19 @@ var workspace;
       this.setHelpUrl("");
     }
   };
+  Blockly.Blocks['door_illum'] = {
+    init: function() {
+      this.appendDummyInput()
+        .appendField("ドアイルミを")
+        .appendField(new Blockly.FieldDropdown([["点灯", "ON"], ["消灯", "OFF"]]), "STATE")
+        .appendField("する");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(200);
+      this.setTooltip("ドアパネルのイルミネーションを点灯または消灯します。");
+      this.setHelpUrl("");
+    }
+  };
   // delayブロックの追加
   Blockly.Blocks['delay'] = {
     init: function() {
@@ -96,6 +109,10 @@ var workspace;
       return 'setVideoPlaying(false);\n';
     }
   };
+  Blockly.JavaScript['door_illum'] = function(block, generator) {
+    var state = block.getFieldValue('STATE');
+    return 'setDoorIllum("' + state + '");\n';
+  };
   Blockly.JavaScript['delay'] = function(block, generator) {
     var time = block.getFieldValue('TIME');
     return 'await delay(' + time + ');\n';
@@ -106,6 +123,7 @@ var workspace;
   Blockly.JavaScript.forBlock['car_light'] = Blockly.JavaScript['car_light'];
   Blockly.JavaScript.forBlock['car_bgm'] = Blockly.JavaScript['car_bgm'];
   Blockly.JavaScript.forBlock['car_video'] = Blockly.JavaScript['car_video'];
+  Blockly.JavaScript.forBlock['door_illum'] = Blockly.JavaScript['door_illum'];
   Blockly.JavaScript.forBlock['delay'] = Blockly.JavaScript['delay'];  
   console.log("car_light generator defined:", window.Blockly.JavaScript['car_light']);
   console.log("window.Blockly.JavaScript:", window.Blockly.JavaScript); // 追加
@@ -118,6 +136,7 @@ var workspace;
       '<block type="car_horn"/>' +
       '<block type="car_bgm"/>' +
       '<block type="car_video"/>' +
+      '<block type="door_illum"/>' +
       '<block type="controls_repeat_ext"><value name="TIMES"><shadow type="math_number"><field name="NUM">10</field></shadow></value></block>' +
       '<block type="controls_whileUntil"/>' +
       '<block type="controls_if"/>' +
@@ -169,6 +188,19 @@ var workspace;
     var videoIndicator = document.getElementById('video-indicator');
     if (videoIndicator) {
       videoIndicator.style.display = isPlaying ? 'block' : 'none';
+    }
+  }
+
+  function setDoorIllum(state) {
+    var left = document.getElementById('door-illum-left');
+    var right = document.getElementById('door-illum-right');
+    if (left) {
+      left.style.opacity = (state === "ON") ? 1 : 0.2;
+      left.style.filter = (state === "ON") ? "drop-shadow(0 0 12px #0ff)" : "none";
+    }
+    if (right) {
+      right.style.opacity = (state === "ON") ? 1 : 0.2;
+      right.style.filter = (state === "ON") ? "drop-shadow(0 0 12px #0ff)" : "none";
     }
   }
 
