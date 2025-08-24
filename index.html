@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Scratch Car</title>
-  <link rel="icon" type="image/svg+xml" href="images/car_interior.svg">
+  <link rel="icon" type="image/svg+xml" href="images/car_interior.png">
   <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
   <h1>Scratch Car</h1>
   <div id="car-container" style="position: relative;">
-    <img id="car-image" src="images/car_interior.svg" alt="Car Interior" style="width:100%;">
-    <!-- car_light_overlay.svgをインラインSVGとして埋め込む -->
-    <svg id="car-light-overlay" width="600" height="400" viewBox="0 0 600 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+    <img id="car-image" src="images/car_interior.png" alt="Car Interior" style="width:100%;">
+    <!-- overlay.svgをインラインSVGとして埋め込む -->
+    <svg id="overlay" width="600" height="400" viewBox="0 0 600 400" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
       <g id="car-light-indicator" style="opacity:0.2">
         <circle cx="300" cy="180" r="18" fill="yellow" stroke="#aaa" stroke-width="3" />
         <rect x="292" y="190" width="16" height="8" rx="3" fill="#ccc" />
