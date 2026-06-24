@@ -1,34 +1,78 @@
-# scratch-car-interior
+# SCRATCH CAR！ 🎁🚗
 
-This is a simple, interactive web-based project that leverages the Blockly library to provide a visual programming environment. Users can drag and drop blocks to create programs that control a virtual car's functionalities, such as turning its lights on/off and playing/stopping its horn. It serves as an educational tool to introduce basic programming concepts through a fun and engaging interface.
+**くるまのラッピングを指でこすって開けよう！ボタンを押してあそぼう！**
 
-## How to Use
+小さな子供から大人まで楽しめる、GitHub Pages で動く Flutter 製インタラクティブゲームです。
 
-1.  **Start a web server:**
-    You need to run a simple web server from the project's root directory. If you have Python installed, you can use the following command:
-    ```bash
-    python3 -m http.server
-    ```
-    If you don't have Python, you can use any other simple web server.
+---
 
-2.  **Open the project in your browser:**
-    Once the server is running, open your web browser and go to the following address:
-    [http://localhost:8000](http://localhost:8000)
+## 🎮 遊び方
 
-    You should see a virtual car and a Blockly editor. You can drag and drop blocks to create a program to control the car's lights and horn.
+### Phase 1: スクラッチ！
+- 画面に包み紙に包まれた車が現れる
+- 指（またはマウス）でゴシゴシこすると車が現れる
+- 68% 以上こすると紙吹雪と共にご開帳！
 
-## How to Debug
+### Phase 2: あそぼう！
+車が現れたら、まわりのボタンを押して遊べる：
 
-1.  **Open the developer console:**
-    In your web browser, open the developer console. You can usually do this by right-clicking on the page and selecting "Inspect" or by pressing `F12`.
+| ボタン | 効果 |
+|--------|------|
+| 📯 プップー | ホーンを鳴らす |
+| 💡 ライト | ヘッドライトが点滅 |
+| 🚿 せんしゃ | 水しぶきが降る |
+| 🎉 パーティ | 紙吹雪が舞う |
+| 🌀 くるくる | 車がスピン |
+| 🌈 いろかえ | 車の色が変わる |
 
-2.  **Check for errors:**
-    Any errors in the JavaScript code will be displayed in the console.
+「**もういっかい！**」で新しい色の車が登場。毎回違う色・柄で何度でも楽しめる。
 
-3.  **Check for log messages:**
-    The `script.js` file contains `console.log` statements that print messages to the console when the car's lights and horn are activated. You can use these messages to see what the code is doing.
+---
 
-## Recent Changes
+## 🚀 GitHub Pages へのデプロイ
 
--   **Fixed Blockly Generator Output:** Corrected an issue where the JavaScript generator functions for the `car_light` and `car_horn` blocks were producing invalid code due to an unnecessary backslash in the return statement. This resolves the `JavaScript generator does not know how to generate code for block type "car_light"` error.
--   **Updated `index.html`:** Modified script loading to include a version parameter and defer loading, and changed the "実行" button text to "Execute" for clarity.
+```bash
+# ビルド（リポジトリ名を base-href に）
+flutter build web --release --base-href /scratch-car-interior/
+
+# docs/ フォルダを更新
+rm -rf docs && cp -r build/web docs
+
+# コミット & プッシュ
+git add docs lib web pubspec.yaml README.md
+git commit -m "feat: SCRATCH CAR！ Flutter game"
+git push
+```
+
+GitHub リポジトリ Settings → Pages → main / docs → Save で公開完了。
+
+---
+
+## 🛠 ローカル開発
+
+```bash
+flutter pub get
+flutter run -d chrome
+```
+
+---
+
+## 技術の見どころ
+
+| 技術 | 用途 |
+|------|------|
+| `Canvas` + **`BlendMode.dstOut`** | スクラッチカード削り効果（saveLayer 内でリアルタイムマスク） |
+| **`FragmentShader`** 相当の `LinearGradient` | ギフトラッピングのシマー表現 |
+| `GestureDetector.onPanUpdate` | 60fps スムーズな指の軌跡追跡 |
+| `CustomPainter` + 独自車デザイン | 完全オリジナルちびカー（実在ブランドなし） |
+| `AnimationController` × 多数 | バウンス・スピン・ライト点滅など多彩なアニメ |
+| Web Audio API (`dart:js_interop`) | サウンド全数式生成（音声ファイル 0 本） |
+| Particle System | 紙吹雪・スパークル |
+
+**外部パッケージ依存ゼロ**・**著作権フリー完全オリジナル**。
+
+---
+
+## ライセンス
+
+MIT
